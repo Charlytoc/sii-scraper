@@ -1,0 +1,5 @@
+venv
+empresas.csv
+
+__pycache__
+.env
