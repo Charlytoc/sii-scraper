@@ -356,12 +356,17 @@ def main(rut, clave, company_name, rest_tries=3):
             )
             Printer.green("¡Consulta integral F29 encontrado!")
             time.sleep(2)
+            # Volver a localizar antes de hacer click para evitar "stale element"
+            consulta_integral_f29 = driver.find_element(By.XPATH, "//a[text()='Consulta Integral F29']")
             consulta_integral_f29.click()
+            # consulta_integral_f29.click()
 
+            Printer.blue("Consultando formulario F29...")
             # esperar que el elemento: <a href="#29">F29 (-)</a> termine de cargar
             f29 = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//a[text()='F29 (+)']"))
             )
+            Printer.green("¡F29 encontrado!")
             FOUND_PROBLEMS = False
 
             try:
