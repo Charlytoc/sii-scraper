@@ -436,7 +436,10 @@ def main(rut, clave, company_name, rest_tries=3):
                 )
             )
             Printer.green("¡Declaraciones juradas renta encontrado! Clickeando...")
-            time.sleep(2)
+            # Volver a localizar antes de hacer click para evitar "stale element"
+            declaraciones_juradas_renta = driver.find_element(
+                By.CSS_SELECTOR, "a[href='1043-1518.html']"
+            )
 
             declaraciones_juradas_renta.click()
 
@@ -446,6 +449,10 @@ def main(rut, clave, company_name, rest_tries=3):
                 )
             )
             Printer.green("¡Consulta declaraciones juradas encontrado! Clickeando...")
+
+            consulta_declaraciones_juradas = driver.find_element(
+                By.CSS_SELECTOR, "a[href='#collapseConsultas']"
+            )
             consulta_declaraciones_juradas.click()
 
             # Go to https://www4.sii.cl/djconsultarentaui/internet/#/
@@ -589,9 +596,15 @@ def main(rut, clave, company_name, rest_tries=3):
             main(rut, clave, company_name, rest_tries=tries)
         else:
             print(
-                "¡Se han agotado los intentos! No se pudo completar la automatización."
+                "¡Se han agotado los intentos! No se pudo completar la automatización. Generando informe..."
             )
+
             driver.quit()
+            with open(UNFORMATTED_FILE, "r", encoding="utf-8") as markdown_file:
+                formatted_markdown = format_markdown(markdown_file.read(), company_name)
+                create_file(formatted_markdown, FORMATTED_FILE)
+                OUTPUT_DOCX = os.path.join(TARGET_DIRECTORY, "informe.docx")
+                convertir_markdown_a_docx(FORMATTED_FILE, PLANTILLA_DOCX, OUTPUT_DOCX)
 
 
 if __name__ == "__main__":
