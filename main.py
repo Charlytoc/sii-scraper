@@ -341,6 +341,8 @@ def main(rut, clave, company_name, rest_tries=3):
                     (By.CSS_SELECTOR, "a[href='1042-3266.html']")
                 )
             )
+            Printer.green("¡Consulta y seguimiento encontrado!")
+            time.sleep(2)
             consulta_seguimiento.click()
 
             # esperar que el elemento <a> con texto: 'Consulta Integral F29' termine de cargar
@@ -352,6 +354,8 @@ def main(rut, clave, company_name, rest_tries=3):
                     )
                 )
             )
+            Printer.green("¡Consulta integral F29 encontrado!")
+            time.sleep(2)
             consulta_integral_f29.click()
 
             # esperar que el elemento: <a href="#29">F29 (-)</a> termine de cargar
@@ -421,7 +425,7 @@ def main(rut, clave, company_name, rest_tries=3):
             )
             Printer.green("¡Declaraciones juradas renta encontrado! Clickeando...")
             time.sleep(2)
-            
+
             declaraciones_juradas_renta.click()
 
             consulta_declaraciones_juradas = WebDriverWait(driver, 10).until(
