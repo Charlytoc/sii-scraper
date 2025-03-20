@@ -420,6 +420,8 @@ def main(rut, clave, company_name, rest_tries=3):
                 )
             )
             Printer.green("¡Declaraciones juradas renta encontrado! Clickeando...")
+            time.sleep(2)
+            
             declaraciones_juradas_renta.click()
 
             consulta_declaraciones_juradas = WebDriverWait(driver, 10).until(
