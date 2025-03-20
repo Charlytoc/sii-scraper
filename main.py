@@ -177,13 +177,13 @@ def main(rut, clave, company_name, rest_tries=3):
     tries += 1
     Printer.blue(f"¡Iniciando programa para {company_name}!")
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")  # Desactiva para depuración
+    chrome_options.add_argument("--headless=new")  # Desactiva para depuración
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument(
         "--window-size=1920,1080"
     )  # Establece una resolución fija
-    chrome_options.add_argument("--start-maximized")  # Maximiza la ventana al iniciar
+    # chrome_options.add_argument("--start-maximized")  # Maximiza la ventana al iniciar
 
     driver = webdriver.Chrome(options=chrome_options)
 
