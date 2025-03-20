@@ -317,18 +317,23 @@ def main(rut, clave, company_name, rest_tries=3):
         # Click en <a href="https://www.sii.cl/servicios_online/">Servicios online <i class="fa fa-caret-down" aria-hidden="true"></i></a>
 
         if "f29_screenshot" not in done_steps:
+            Printer.blue("Obteniendo formulario F29...")
             servicios_online = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable(
                     (By.CSS_SELECTOR, "a[href='https://www.sii.cl/servicios_online/']")
                 )
             )
+            Printer.green("¡Servicios online encontrado!")
             servicios_online.click()
+
+            Printer.blue("Obteniendo impuestos mensuales...")
             impuestos_mensuales = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located(
                     (By.CSS_SELECTOR, "a[id='linkpadre_1042']")
                 )
             )
             impuestos_mensuales.click()
+            Printer.green("¡Impuestos mensuales encontrado!")
 
             # Esperar que el elemento: <a href="1042-3266.html" target="_self">Consulta y seguimiento (F29 y F50) <i class="fa fa-chevron-circle-right pull-right fa-lg" aria-hidden="true"></i></a> termine de cargar
             consulta_seguimiento = WebDriverWait(driver, 10).until(
