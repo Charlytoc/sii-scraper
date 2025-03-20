@@ -16,6 +16,9 @@ call venv\Scripts\activate
 echo Verificando dependencias...
 pip install -r requirements.txt > nul 2>&1
 
+:: Verificar y crear el archivo .env
+python utils/verify_env.py
+
 :: Ejecutar el script principal
 echo Ejecutando main.py...
 python main.py

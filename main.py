@@ -17,7 +17,7 @@ from utils.constants import selectors, convertir_markdown_a_docx, extraer_markdo
 from utils.printer import Printer
 from utils.openai_calls import create_completion_openai
 import os
-from utils.files import create_file_paths
+from utils.files import create_file_paths, open_docx
 
 """
 EXAMPLE CSV:
@@ -50,8 +50,7 @@ def format_markdown(markdown_content: str, from_company: str) -> str:
         f"FerConsultorAI está terminando el markdown de la empresa {from_company}..."
     )
     markdown = create_completion_openai(
-        system_prompt="You are a helpful assistant capable of formatting HTML content to markdown in an engaging way. Use rich formatting when needed, lists, headings, etc. Return only the markdown content, no other text or comments. If there are images present in the original content, include them in the resulting markdown file using the exact path provided in the markdown file. You need also to convert table into lists, after your formatting, Pandoc will be used to convert the markdown file to docx.\n\n You can use a frontmatter to add the title and the date of the report. The author should be 'FerConsultorAI': Today is: "
-        + datetime.now().strftime("%d/%m/%Y"),
+        system_prompt=f"You are a helpful assistant capable of formatting HTML content to markdown in an engaging way. Use rich formatting when needed, lists, headings, etc. Return only the markdown content, no other text or comments. If there are images present in the original content, include them in the resulting markdown file using the exact path provided in the original file. You need also to convert table into lists, after your formatting, Pandoc will be used to convert your response to docx.\n\n You can use a frontmatter to add the title and the date of the report. The title should be 'Reporte SII para {from_company}' The author should be 'FerConsultorAI': Today is: {datetime.now().strftime('%d/%m/%Y')}",
         user_prompt=markdown_content,
     )
     return extraer_markdown(markdown)
@@ -90,7 +89,7 @@ def login(driver, rut, clave):
     return driver
 
 
-def capture_modal(driver, TARGET_DIRECTORY) -> bool:
+def capture_modal(driver, TARGET_DIRECTORY, UNFORMATTED_FILE) -> bool:
     try:
         Printer.blue("Checking if modal is present...")
         modal_emergente = WebDriverWait(driver, 5).until(
@@ -100,9 +99,15 @@ def capture_modal(driver, TARGET_DIRECTORY) -> bool:
         )
 
         Printer.blue("Modal is present, taking screenshot...")
-        modal_emergente.screenshot(
-            os.path.join(TARGET_DIRECTORY, "modal_emergente_cerrada.png")
-        )
+        modal_path = os.path.join(TARGET_DIRECTORY, "modal_emergente_cerrada.png")
+        modal_emergente.screenshot(modal_path)
+        modal_text = modal_emergente.text
+
+        with open(UNFORMATTED_FILE, "a", encoding="utf-8") as markdown_file:
+            markdown_file.write(
+                f"## Modal emergente cerrada, un asesor debe revisar la información \n\n![Modal emergente cerrada]({modal_path})\n\n"
+            )
+            markdown_file.write(f"## Texto del modal \n\n{modal_text}\n\n")
 
         # And the close the modal clicking the button #ModalEmergente button.close
         boton_cerrar_modal = WebDriverWait(driver, 10).until(
@@ -131,7 +136,6 @@ def take_screenshot_to_responsabilities(driver, TARGET_DIRECTORY, UNFORMATTED_FI
         markdown_file.write(
             f"## Responsabilidades tributarias \n\n![Responsabilidades tributarias]({ss_path})\n\n"
         )
-    Printer.green("Responsabilidades tributarias screenshot saved!")
 
 
 # tries = 0
@@ -176,6 +180,10 @@ def main(rut, clave, company_name, rest_tries=3):
     # chrome_options.add_argument("--headless")  # Desactiva para depuración
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument(
+        "--window-size=1920,1080"
+    )  # Establece una resolución fija
+    chrome_options.add_argument("--start-maximized")  # Maximiza la ventana al iniciar
 
     driver = webdriver.Chrome(options=chrome_options)
 
@@ -192,7 +200,7 @@ def main(rut, clave, company_name, rest_tries=3):
 
         time.sleep(3)
 
-        capture_modal(driver, TARGET_DIRECTORY)
+        capture_modal(driver, TARGET_DIRECTORY, UNFORMATTED_FILE)
 
         if "responsabilidades_tributarias_screenshot" not in done_steps:
             take_screenshot_to_responsabilities(
@@ -220,12 +228,12 @@ def main(rut, clave, company_name, rest_tries=3):
                 markdown_file.write(
                     "## Datos personales y tributarios del contribuyente\n\n"
                 )
-                markdown_file.write(profile_text)
+                markdown_file.write(str(profile_text))
                 markdown_file.write("\n\n---\n\n")
                 markdown_file.write(
                     f"![Datos personales y tributarios]({PROFILE_FILE})\n\n"
                 )
-                markdown_file.write()
+
             done_steps.append("datos_contribuyente_screenshot")
             Printer.green(
                 "¡Screenshot de datos personales y tributarios guardado! Información agregada al archivo markdown."
@@ -541,6 +549,7 @@ def main(rut, clave, company_name, rest_tries=3):
             create_file(formatted_markdown, FORMATTED_FILE)
             OUTPUT_DOCX = os.path.join(TARGET_DIRECTORY, "informe.docx")
             convertir_markdown_a_docx(FORMATTED_FILE, PLANTILLA_DOCX, OUTPUT_DOCX)
+            # open_docx(OUTPUT_DOCX)
 
     except Exception as e:
         print(f"¡Error durante la automatización!: {e}")

@@ -1,12 +1,12 @@
-## FerconsultorAI
+# FerconsultorAI
 
 FerConsultorAI es un programa simple de Python que automatiza el proceso de descarga de los reportes de la SII de Chile, usando herramientas de Python para obtener los datos de la SII, crear un reporte en formato DOCX y luego guardarlo en la carpeta `reports`.
 
-### Instalación
+## Instalación
 
 Para que FerConsultorAI funcione, necesitas instalar los siguientes requisitos previos:
 
-#### Pyenv
+### Pyenv
 
 Pyenv es un gestor de versiones de Python. Con él se pueden instalar múltiples versiones de Python en una misma máquina.
 
@@ -25,7 +25,7 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 ```
 
-#### Python con Pyenv
+### Python con Pyenv
 
 Para instalar Python con pyenv, puedes seguir estos pasos:
 
@@ -42,7 +42,7 @@ pyenv install 3.12.7
 pyenv global 3.12.7
 ```
 
-#### Pandoc
+### Pandoc
 
 Pandoc es un compilador de documentos que puede ser útil para la conversión de formatos. En FerConsultorAI, Pandoc se usa para convertir un archivo Markdown a DOCX.
 
@@ -50,8 +50,46 @@ Pandoc es un compilador de documentos que puede ser útil para la conversión de
 
 2. Descarga el archivo `pandoc-3.6.4-windows-x86_64.msi` y sigue los pasos de la instalación.
 
-#### Instalación de dependencias
+### Ejecutar FerConsultorAI
 
-3. **Entorno Virtual**: Cree un entorno virtual para el proyecto.
-4. **Dependencias**: Instale todas las dependencias necesarias.
-5. **Pandoc**: Un compilador de documentos que puede ser �til para la conversi�n de formatos.
+Para ejecutar FerConsultorAI, puedes ejecutar el siguiente comando:
+
+```powershell
+./run.bat
+```
+
+Este comando se encargará de instalar las dependencias, crear el entorno virtual y ejecutar el script principal. Las primeras dos acciones solo se ejecutarán si el entorno virtual no existe.
+
+## Configuración
+
+Puedes agregar una lista de empresas en el archivo `reports/config/empresas.csv`.
+
+Cada fila de este archivo debe tener el siguiente formato:
+
+```
+NOMBRE EMPRESA,RUT EMPRESA,CLAVE SII
+nombre_de_la_empresa,rut_de_la_empresa,nombre_del_asesor
+nombre_de_la_empresa,rut_de_la_empresa,nombre_del_asesor
+nombre_de_la_empresa,rut_de_la_empresa,nombre_del_asesor
+nombre_de_la_empresa,rut_de_la_empresa,nombre_del_asesor
+```
+
+La primera columna es el nombre de la empresa, la segunda es el RUT de la empresa y la tercera es la clave SII de la empresa.
+
+## Uso
+
+Para usar FerConsultorAI, solo necesitas ejecutar el script principal.
+
+```powershell
+./run.bat
+```
+
+En la línea de comandos se te va a preguntar si quieres ejecutar una empresa (tendrás que ingresar los datos) o si quieres ejecutar todas las empresas (se usarán los datos de la lista de empresas en el archivo `reports/config/empresas.csv`).
+
+Si es la primera vez que ejecutas el script, se te pedirá que ingreses una clave de OpenAI para usar un modelo de IA y darle un formato amigable al informe final.
+
+## Reportes
+
+Los reportes se guardarán en la carpeta `reports/nombre_de_la_empresa/fecha_del_reporte`.
+
+Dentro de esta carpeta encontrarás luego de finalizar el proceso el informe en formato DOCX y todas las imágenes que se han descargado.

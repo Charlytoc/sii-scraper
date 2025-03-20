@@ -1,4 +1,7 @@
 import os
+import subprocess
+import sys
+
 from datetime import datetime
 
 
@@ -40,3 +43,16 @@ def create_file_paths(name: str, SII_REPORTS_DIRECTORY: str):
         GW_FORMULARIO_BASE_CELDA_FILE,
         DECLARACIONES_JURADAS_FILE,
     )
+
+
+def open_docx(ruta_archivo):
+    """Abre un archivo .docx con el programa predeterminado según el sistema operativo."""
+    try:
+        if sys.platform == "win32":  # Windows
+            os.startfile(ruta_archivo)
+        elif sys.platform == "darwin":  # macOS
+            subprocess.run(["open", ruta_archivo], check=True)
+        else:  # Linux
+            subprocess.run(["xdg-open", ruta_archivo], check=True)
+    except Exception as e:
+        print(f"Error al abrir el archivo: {e}")
