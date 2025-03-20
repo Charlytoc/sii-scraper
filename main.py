@@ -342,8 +342,13 @@ def main(rut, clave, company_name, rest_tries=3):
                 )
             )
             Printer.green("¡Consulta y seguimiento encontrado!")
-            time.sleep(2)
+
+            consulta_seguimiento = driver.find_element(
+                By.CSS_SELECTOR, "a[href='1042-3266.html']"
+            )
             consulta_seguimiento.click()
+
+            Printer.green("¡Consulta y seguimiento clickeado!")
 
             # esperar que el elemento <a> con texto: 'Consulta Integral F29' termine de cargar
             consulta_integral_f29 = WebDriverWait(driver, 20).until(
@@ -355,9 +360,11 @@ def main(rut, clave, company_name, rest_tries=3):
                 )
             )
             Printer.green("¡Consulta integral F29 encontrado!")
-            time.sleep(2)
+
             # Volver a localizar antes de hacer click para evitar "stale element"
-            consulta_integral_f29 = driver.find_element(By.XPATH, "//a[text()='Consulta Integral F29']")
+            consulta_integral_f29 = driver.find_element(
+                By.XPATH, "//a[text()='Consulta Integral F29']"
+            )
             consulta_integral_f29.click()
             # consulta_integral_f29.click()
 
