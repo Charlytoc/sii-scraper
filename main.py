@@ -29,8 +29,10 @@ SAAVEDRA Y CIA LTDA,77817720-K,1978381
 
 # Cargar las variables del archivo .env
 load_dotenv()
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-SII_REPORTS_DIRECTORY = os.path.join(desktop_path, "sii_reports")
+# desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+# SII_REPORTS_DIRECTORY = os.path.join(desktop_path, "sii_reports")
+SII_REPORTS_DIRECTORY = os.path.join(os.getcwd(), "reports")
+
 if not os.path.exists(SII_REPORTS_DIRECTORY):
     os.makedirs(SII_REPORTS_DIRECTORY)
 LOGIN_PAGE = "https://misiir.sii.cl/cgi_misii/siihome.cgi"
@@ -223,6 +225,7 @@ def main(rut, clave, company_name, rest_tries=3):
                 markdown_file.write(
                     f"![Datos personales y tributarios]({PROFILE_FILE})\n\n"
                 )
+                markdown_file.write()
             done_steps.append("datos_contribuyente_screenshot")
             Printer.green(
                 "¡Screenshot de datos personales y tributarios guardado! Información agregada al archivo markdown."
@@ -554,6 +557,8 @@ def main(rut, clave, company_name, rest_tries=3):
 
 
 if __name__ == "__main__":
+    # Esto es un script de automatizaci�n para procesar informaci�n tributaria.
+
     # if os.path.exists(EMPRESAS_CSV):
     answer = select_from_list(
         [
