@@ -1,5 +1,7 @@
 @echo off
 setlocal
+:: Git pull
+git pull
 
 :: Verificar si el entorno virtual ya existe
 if exist venv (
