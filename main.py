@@ -411,12 +411,15 @@ def main(rut, clave, company_name, rest_tries=3):
                     (By.CSS_SELECTOR, "a[id='linkpadre_1043']")
                 )
             )
+            Printer.green("¡Declaraciones juradas encontrado! Clickeando...")
             declaraciones_juradas.click()
+
             declaraciones_juradas_renta = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located(
                     (By.CSS_SELECTOR, "a[href='1043-1518.html']")
                 )
             )
+            Printer.green("¡Declaraciones juradas renta encontrado! Clickeando...")
             declaraciones_juradas_renta.click()
 
             consulta_declaraciones_juradas = WebDriverWait(driver, 10).until(
@@ -424,6 +427,7 @@ def main(rut, clave, company_name, rest_tries=3):
                     (By.CSS_SELECTOR, "a[href='#collapseConsultas']")
                 )
             )
+            Printer.green("¡Consulta declaraciones juradas encontrado! Clickeando...")
             consulta_declaraciones_juradas.click()
 
             # Go to https://www4.sii.cl/djconsultarentaui/internet/#/
@@ -433,9 +437,11 @@ def main(rut, clave, company_name, rest_tries=3):
             consulta_estado_giros_emitidos = WebDriverWait(driver, 100).until(
                 EC.presence_of_element_located((By.ID, "consulta"))
             )
+            Printer.green("¡Consulta estado giros emitidos encontrado!")
 
             time.sleep(5)
 
+            Printer.blue("Tomando screenshot de la tabla...")
             # Tomarle screenshot de la tabla
             consulta_estado_giros_emitidos.screenshot(
                 os.path.join(TARGET_DIRECTORY, "consulta_estado_giros_emitidos.png")
